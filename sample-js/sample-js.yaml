@@ -13,15 +13,17 @@ spec:
       labels:
         app: hello-js
     spec:
+      securityContext:
+        runAsUser: 1000
       containers:
-      - name: hello-js
-        image: costa86/sample-js:2.0.0
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "250m" #1/4 of CPU
-        ports:
-        - containerPort: 3000
+        - name: hello-js
+          image: costa86/sample-js:2.0.0
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "250m" #1/4 of CPU
+          ports:
+            - containerPort: 3000
 ---
 #service
 apiVersion: v1
@@ -33,6 +35,6 @@ spec:
   selector:
     app: hello-js
   ports:
-  - port: 3030 #external
-    targetPort: 3000
-    nodePort: 30000 #(must range 30000-32767, optional. if not set, cluster will randomize it)
+    - port: 3030 #external
+      targetPort: 3000
+      nodePort: 30000 #(must range 30000-32767, optional. if not set, cluster will randomize it)

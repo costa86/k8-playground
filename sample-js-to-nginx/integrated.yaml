@@ -13,15 +13,17 @@ spec:
       labels:
         app: hello-js-nginx
     spec:
+      securityContext:
+        runAsUser: 1000
       containers:
-      - name: hello-js-nginx
-        image: costa86/sample-js-nginx
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "250m" #1/4 of CPU
-        ports:
-        - containerPort: 3000
+        - name: hello-js-nginx
+          image: costa86/sample-js-nginx
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "250m" #1/4 of CPU
+          ports:
+            - containerPort: 3000
 ---
 #service
 apiVersion: v1
@@ -33,5 +35,6 @@ spec:
   selector:
     app: hello-js-nginx
   ports:
-  - port: 3333 #external
-    targetPort: 3000
+    - port: 3333 #external
+      targetPort: 3000
+      nodePort: 30001
