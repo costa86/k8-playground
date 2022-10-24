@@ -1,0 +1,38 @@
+#deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-js
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: hello-js
+  template:
+    metadata:
+      labels:
+        app: hello-js
+    spec:
+      containers:
+      - name: hello-js
+        image: costa86/sample-js:2.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m" #1/4 of CPU
+        ports:
+        - containerPort: 3000
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-js
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-js
+  ports:
+  - port: 3030 #external
+    targetPort: 3000
+    nodePort: 30000 #(must range 30000-32767, optional. if not set, cluster will randomize it)

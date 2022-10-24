@@ -1,0 +1,37 @@
+#deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-js-nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: hello-js-nginx
+  template:
+    metadata:
+      labels:
+        app: hello-js-nginx
+    spec:
+      containers:
+      - name: hello-js-nginx
+        image: costa86/sample-js-nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m" #1/4 of CPU
+        ports:
+        - containerPort: 3000
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-js-nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-js-nginx
+  ports:
+  - port: 3333 #external
+    targetPort: 3000
